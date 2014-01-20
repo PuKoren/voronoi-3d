@@ -1,7 +1,7 @@
 #include "Cube.h"
 
 Cube::Cube(){
-    delaunayPointsCount = 30;
+    delaunayPointsCount = 180;
 }
 
 Cube::~Cube(){
@@ -29,6 +29,12 @@ void Cube::Draw(){
     glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
     glDisableVertexAttribArray(0);
+
+    glBegin(GL_POINTS);
+    for(unsigned int i = 0; i < this->delaunayPoints.size(); i ++){
+        glVertex3f(this->delaunayPoints[i].X, this->delaunayPoints[i].Y, this->delaunayPoints[i].Z);
+    }
+    glEnd( );
 
 
 }
