@@ -31,7 +31,6 @@ const GLfloat cubeVerticesStrip[] = {
 
 int LightPos[4] = {0,0,0,1};
 void Application::Draw(){
-    
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //wireframe mode
     if(wireframe){
@@ -39,11 +38,6 @@ void Application::Draw(){
     }else{
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
-    
-    //projection matrice setup
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.f, 800/800, 1.f, 100.f);
     
     //modify object model view matrice to rotate
     glMatrixMode(GL_MODELVIEW);
