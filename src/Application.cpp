@@ -11,6 +11,26 @@ Application::~Application(){
 
 }
 
+void Application::Init(){
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    
+    // Create light components
+    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    GLfloat position[] = { 5.f, 0.0f, 0.0f, 1.0f };
+
+    // Assign created components to GL_LIGHT0
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+    cube.Init();
+}
+
 void Application::Input(unsigned char key, int x, int y){
     if(key == 119){
         wireframe = (!wireframe);
@@ -19,17 +39,6 @@ void Application::Input(unsigned char key, int x, int y){
     }
 }
 
-const GLfloat cubeVerticesStrip[] = {
-        -1,-1,1, 1,-1,1, -1,1,1, 1,1,1,
-        1,1,1, 1,-1,1, 1,1,-1, 1,-1,-1,
-        1,-1,-1, -1,-1,-1, 1,1,-1, -1,1,-1,
-        -1,1,-1, -1,-1,-1, -1,1,1, -1,-1,1,
-        -1,-1,1, -1,-1,-1, 1,-1,1, 1,-1,-1,
-        1,-1,-1, -1,1,1,
-        -1,1,1, 1,1,1, -1,1,-1, 1,1,-1
-    };
-
-int LightPos[4] = {0,0,0,1};
 void Application::Draw(){
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //wireframe mode
@@ -39,15 +48,13 @@ void Application::Draw(){
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
     
-    //modify object model view matrice to rotate
+    //modify object model view matrice to rotate with eyeX and eyeZ values
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(eyeX, 0, eyeZ, 0, 0, 0, 0, 1, 0);
-
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, 0, cubeVerticesStrip);
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 26);
     
+    cube.Draw();
+
     glutSwapBuffers();
 }
 
@@ -59,6 +66,8 @@ void Application::Update(double deltaTime){
 
     eyeX = 0 + 5*sin(relativeX);
     eyeZ = 0 + 5*cos(relativeX);
+
+    cube.Update(deltaTime);
 
     glutPostRedisplay();
 }

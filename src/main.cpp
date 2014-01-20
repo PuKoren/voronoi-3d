@@ -1,9 +1,12 @@
-#include <GL\glew.h>
-#include <GL\freeglut.h>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include "Application.h"
+
 int previousTime = 0;
-int width, height = 800;
+int width = 200;
+int height = 200;
 Application a;
+
 void Input(unsigned char key, int x, int y);
 void Draw();
 void Update();
@@ -13,23 +16,20 @@ int main(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(width, height);
-
+    glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH))/2 - width/2, (glutGet(GLUT_SCREEN_HEIGHT))/2  - height/2);
     glutCreateWindow("Voronoi 3D");
     glewInit();
+
     glutDisplayFunc(Draw);
     glutIdleFunc(Update);
     glutKeyboardFunc(Input);
     glutReshapeFunc(Reshape);
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45.f, width/height, 1.f, 100.f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+
+    a.Init();
 
     glutMainLoop();
 
