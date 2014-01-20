@@ -11,3 +11,15 @@
 *.lai
 *.la
 *.a
+
+# Visual Studio trash
+visual-studio/Debug/*
+visual-studio/*.opensdf
+visual-studio/*.sdf
+visual-studio/*.v11.suo
+visual-studio/*.user
+
+
+# CMake build files
+build/*
+CMakeLists.txt.user
