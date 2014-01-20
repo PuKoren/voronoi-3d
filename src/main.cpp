@@ -3,6 +3,7 @@
 #include "Application.h"
 int previousTime = 0;
 Application a;
+void Input(unsigned char key, int x, int y);
 void Draw();
 void Update();
 
@@ -15,12 +16,19 @@ int main(int argc, char** argv){
     glewInit();
     glutDisplayFunc(Draw);
     glutIdleFunc(Update);
+    glutKeyboardFunc(Input);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 
     glutMainLoop();
 
     return EXIT_SUCCESS;
+}
+
+void Input(unsigned char key, int x, int y){
+    a.Input(key, x, y);
 }
 
 void Update(){

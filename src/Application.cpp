@@ -4,10 +4,19 @@ Application::Application(){
     eyeX = 0;
     eyeZ = 0;
     relativeX = 0;
+    wireframe = false;
 }
 
 Application::~Application(){
 
+}
+
+void Application::Input(unsigned char key, int x, int y){
+    if(key == 119){
+        wireframe = (!wireframe);
+    }else if(key == 27){
+        glutExit();
+    }
 }
 
 const GLfloat cubeVerticesStrip[] = {
@@ -20,16 +29,23 @@ const GLfloat cubeVerticesStrip[] = {
         -1,1,1, 1,1,1, -1,1,-1, 1,1,-1
     };
 
+int LightPos[4] = {0,0,0,1};
 void Application::Draw(){
-    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //wireframe
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //wireframe mode
+    if(wireframe){
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    }else{
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
+    
+    //projection matrice setup
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45.f, 800/800, 1.f, 100.f);
-
-    //drawing cube
+    
+    //modify object model view matrice to rotate
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(eyeX, 0, eyeZ, 0, 0, 0, 0, 1, 0);
@@ -40,15 +56,14 @@ void Application::Draw(){
     
     glutSwapBuffers();
 }
-#include <math.h>
+
 void Application::Update(double deltaTime){
-    relativeX += ((deltaTime*50.f)/800)*3.14;
-    if(relativeX > 3.14){
-        relativeX -= 3.14;
+    relativeX += (((float)deltaTime*50.f)/800)*3.14f;
+    if(relativeX > 3.14f){
+        relativeX -= 3.14f;
     }
-    //float relativeY = (((float)y/(float)WINDOW_HEIGHT))*ESGI_PI;
+
     eyeX = 0 + 5*sin(relativeX);
-    //eyeY = 0 + radius*sin(relativeY);
     eyeZ = 0 + 5*cos(relativeX);
 
     glutPostRedisplay();
