@@ -1,3 +1,5 @@
+#include <GL\glew.h>
+#include <GL\freeglut.h>
 #include "Application.h"
 int previousTime = 0;
 Application a;
@@ -7,11 +9,14 @@ void Update();
 int main(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
+    glutInitWindowSize(800, 800);
 
     glutCreateWindow("Voronoi 3D");
+    glewInit();
     glutDisplayFunc(Draw);
     glutIdleFunc(Update);
+
+    glEnable(GL_DEPTH_TEST);
 
     glutMainLoop();
 
