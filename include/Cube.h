@@ -51,6 +51,8 @@ class Cube: public IGameObject{
 private:
     std::vector<Vector3> GetBoundaries();
     GLuint VertexArrayID;
+    GLuint PointsArrayID;
+    GLfloat* delaunayPointsArray;
     std::vector<Vector3> delaunayPoints;
     int delaunayPointsCount;
 public:

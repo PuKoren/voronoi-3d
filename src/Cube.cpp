@@ -1,14 +1,17 @@
 #include "Cube.h"
 
 Cube::Cube(){
-    delaunayPointsCount = 180;
+    this->delaunayPointsCount = 180;
+    this->delaunayPointsArray = NULL;
 }
 
 Cube::~Cube(){
-
+    delete[] this->delaunayPointsArray;
 }
 
 void Cube::Init(){
+    glGenBuffers(1, &this->PointsArrayID);
+
     glGenBuffers(1, &VertexArrayID);
     glBindBuffer(GL_ARRAY_BUFFER, VertexArrayID);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
@@ -17,9 +20,9 @@ void Cube::Init(){
 }
 
 void Cube::Draw(){
-    glEnableVertexAttribArray(0);
+    
     glBindBuffer(GL_ARRAY_BUFFER, VertexArrayID);
-
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,// attribute 0. No particular reason for 0, but must match the layout in the shader.
         3,                  // size
         GL_FLOAT,           // type
@@ -27,16 +30,18 @@ void Cube::Draw(){
         0,                  // stride
         (void*)0);
     glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-
     glDisableVertexAttribArray(0);
 
-    glBegin(GL_POINTS);
-    for(unsigned int i = 0; i < this->delaunayPoints.size(); i ++){
-        glVertex3f(this->delaunayPoints[i].X, this->delaunayPoints[i].Y, this->delaunayPoints[i].Z);
-    }
-    glEnd( );
-
-
+    glBindBuffer(GL_ARRAY_BUFFER, PointsArrayID);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0,// attribute 0. No particular reason for 0, but must match the layout in the shader.
+        3,                  // size
+        GL_FLOAT,           // type
+        GL_FALSE,           // normalized?
+        0,                  // stride
+        (void*)0);
+    glDrawArrays(GL_POINTS, 0, this->delaunayPoints.size()*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDisableVertexAttribArray(0);
 }
 
 void Cube::Update(double deltaTime){
@@ -51,9 +56,18 @@ void Cube::RandomizePoints(){
     std::uniform_real_distribution<float> distributionY(bounds[0].Y, bounds[1].Y);
     std::uniform_real_distribution<float> distributionZ(bounds[0].Z, bounds[1].Z);
 
+    this->delaunayPointsArray = new GLfloat[this->delaunayPointsCount*3];
+
     for(int i = 0; i < this->delaunayPointsCount; i ++){
-        delaunayPoints.push_back(Vector3(distributionX(generator), distributionY(generator), distributionZ(generator)));
+        Vector3 point(distributionX(generator), distributionY(generator), distributionZ(generator));
+        delaunayPoints.push_back(point);
+        this->delaunayPointsArray[i*3] = point.X;
+        this->delaunayPointsArray[i*3+1] = point.Y;
+        this->delaunayPointsArray[i*3+2] = point.Z;
     }
+    
+    glBindBuffer(GL_ARRAY_BUFFER, this->PointsArrayID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*this->delaunayPointsCount*3, this->delaunayPointsArray, GL_STATIC_DRAW);
 }
 
 std::vector<Vector3> Cube::GetBoundaries(){
