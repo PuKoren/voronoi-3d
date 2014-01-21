@@ -69,7 +69,7 @@ void Cube::RandomizePoints(){
     }
     
     glBindBuffer(GL_ARRAY_BUFFER, this->PointsArrayID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*this->delaunayPointsCount*3, this->delaunayPointsArray, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*this->delaunayPointsCount*3, this->delaunayPointsArray, GL_DYNAMIC_DRAW);
 }
 
 std::vector<Vector3> Cube::GetBoundaries(){
