@@ -1,7 +1,7 @@
 #include "Cube.h"
 
 Cube::Cube(){
-    this->delaunayPointsCount = 180;
+    this->delaunayPointsCount = 200;
     this->delaunayPointsArray = NULL;
 }
 
@@ -51,16 +51,18 @@ void Cube::Update(double deltaTime){
 void Cube::RandomizePoints(){
     std::vector<Vector3> bounds = this->GetBoundaries();
     std::default_random_engine generator;
-    generator.seed(time(NULL));
+    generator.seed((unsigned long)time(NULL));
     std::uniform_real_distribution<float> distributionX(bounds[0].X, bounds[1].X);
     std::uniform_real_distribution<float> distributionY(bounds[0].Y, bounds[1].Y);
     std::uniform_real_distribution<float> distributionZ(bounds[0].Z, bounds[1].Z);
 
+    this->delaunayPoints.clear();
+    delete[] this->delaunayPointsArray;
     this->delaunayPointsArray = new GLfloat[this->delaunayPointsCount*3];
 
     for(int i = 0; i < this->delaunayPointsCount; i ++){
         Vector3 point(distributionX(generator), distributionY(generator), distributionZ(generator));
-        delaunayPoints.push_back(point);
+        this->delaunayPoints.push_back(point);
         this->delaunayPointsArray[i*3] = point.X;
         this->delaunayPointsArray[i*3+1] = point.Y;
         this->delaunayPointsArray[i*3+2] = point.Z;
