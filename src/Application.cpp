@@ -43,7 +43,7 @@ void Application::Draw(){
     //modify object model view matrice to rotate with eyeX and eyeZ values
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(eyeX, 0, eyeZ, 0, 0, 0, 0, 1, 0);
+    gluLookAt(eyeX, 3, eyeZ, 0, 0, 0, 0, 1, 0);
     
     cube.Draw();
 
