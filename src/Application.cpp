@@ -3,8 +3,11 @@
 Application::Application(){
     eyeX = 0;
     eyeZ = 0;
+    radius = 5;
     relativeX = 0;
     wireframe = false;
+    turnSpeed = 0.5f;
+    zoomSpeed = 0.5f;
 }
 
 Application::~Application(){
@@ -14,6 +17,10 @@ Application::~Application(){
 void Application::Init(){
     glEnable(GL_DEPTH_TEST);
     cube.Init();
+}
+
+void Application::Zoom(int direction){
+    radius += direction*zoomSpeed;
 }
 
 void Application::Input(unsigned char key, int x, int y){
@@ -44,13 +51,10 @@ void Application::Draw(){
 }
 
 void Application::Update(double deltaTime){
-    relativeX += (((float)deltaTime*50.f)/800)*3.14f;
-    if(relativeX > 3.14f){
-        relativeX -= 3.14f;
-    }
-
-    eyeX = 0 + 5*sin(relativeX);
-    eyeZ = 0 + 5*cos(relativeX);
+    relativeX += (((float)deltaTime*turnSpeed))*M_PI;
+    
+    eyeX = radius*sin(relativeX);
+    eyeZ = radius*cos(relativeX);
 
     cube.Update(deltaTime);
 
