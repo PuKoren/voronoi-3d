@@ -3,8 +3,8 @@
 #include "Application.h"
 
 int previousTime = 0;
-int width = 200;
-int height = 200;
+int width = 800;
+int height = 800;
 Application a;
 
 void Input(unsigned char key, int x, int y);
